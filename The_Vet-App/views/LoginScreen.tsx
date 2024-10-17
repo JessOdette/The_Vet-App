@@ -1,14 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { AuthContext } from '././authentication';
 
-export default function App() {
+export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const authContext = useContext(AuthContext);
+  const auth = authContext ? authContext.auth : getAuth();
 
   const handleLogin = () => {
-    console.log('Email:', email);
-    console.log('Password:', password);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log("User logged in: " + userCredential.user.email);
+      })
+      .catch((error) => {
+        console.log("Error: " + error.message);
+        if (error.code === 'auth/user-not-found') {
+          alert('User not found. Please sign up.');
+        }
+      });
   };
 
   return (

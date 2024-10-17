@@ -1,17 +1,38 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import { View, StyleSheet, Button } from 'react-native';
+import Authentication from './views/authentication';
+import SignUp from './views/signup';
 import LoginScreen from './views/LoginScreen';
-import HomeScreen from './views/HomeScreen'; 
-const Stack = createStackNavigator();
 
 export default function App() {
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
+
+  const handleShowLogin = () => setShowLogin(true);
+  const handleShowSignUp = () => setShowSignUp(true);
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Authentication>
+      <View style={styles.container}>
+        {!showLogin && !showSignUp ? (
+          <>
+            <Button title="Login" onPress={handleShowLogin} />
+            <Button title="Sign Up" onPress={handleShowSignUp} />
+          </>
+        ) : showLogin ? (
+          <LoginScreen />
+        ) : (
+          <SignUp />
+        )}
+      </View>
+    </Authentication>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
